@@ -1,22 +1,20 @@
-import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 class Solution {
     public int solution(int[] nums) {
         int answer = 0;
-        int N = nums.length;
-        
-        Arrays.sort(nums);
-        int count =0;
-        
-        for(int i=0; i<N-1; i++){
-            if(nums[i] != nums[i+1]){
-                count++;
-                if(count >= N/2){
-                    break;
-                }
-            }
+
+        Set<Integer> set = new HashSet<>(); 
+        for (int num : nums) {
+                set.add(num);
         }
-        answer = Math.min(count + 1, N / 2);
+
+        int N = nums.length;
+        int S = set.size();
+
+        answer = Math.min(S, N / 2);
+
         return answer;
     }
 }
