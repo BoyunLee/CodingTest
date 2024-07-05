@@ -3,22 +3,19 @@ import java.util.Scanner;
 public class Solution {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine();
+        String a = sc.nextLine();
         
-        char[] chars = input.toCharArray();
+        StringBuilder result = new StringBuilder();
         
-        for (int i = 0; i < chars.length; i++) {
-            char ch = chars[i];
-            if (ch >= 'a' && ch <= 'z') {
-                // 소문자를 대문자로 변환
-                chars[i] = (char) (ch - 32);
-            } else if (ch >= 'A' && ch <= 'Z') {
-                // 대문자를 소문자로 변환
-                chars[i] = (char) (ch + 32);
+        for (int i = 0; i < a.length(); i++) {
+            char ch = a.charAt(i);
+            if (Character.isUpperCase(ch)) {
+                result.append(Character.toLowerCase(ch));
+            } else {
+                result.append(Character.toUpperCase(ch));
             }
         }
         
-        String result = new String(chars);
-        System.out.println(result);
+        System.out.println(result.toString());
     }
 }
