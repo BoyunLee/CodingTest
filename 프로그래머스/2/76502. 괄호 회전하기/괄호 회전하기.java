@@ -3,10 +3,11 @@ import java.util.Stack;
 class Solution {
     public int solution(String s) {
         int answer = 0;
-
-        // 문자열 회전
-        for (int i = 0; i < s.length(); i++) {
-            String rotatedStr = s.substring(i) + s.substring(0, i);
+        
+        String A = s + s; 
+        
+        for(int i=0; i<s.length(); i++) {
+             String rotatedStr = A.substring(i, i + s.length());
             if (isValid(rotatedStr)) {
                 answer++;
             }
@@ -14,10 +15,20 @@ class Solution {
         return answer;
     }
 
+    //     // 문자열 회전
+    //     for (int i = 0; i < s.length(); i++) {
+    //         String rotatedStr = s.substring(i) + s.substring(0, i);
+    //         if (isValid(rotatedStr)) {
+    //             answer++;
+    //         }
+    //     }
+    //     return answer;
+    // }
+
     // 괄호 짝 검사 메서드
-    private boolean isValid(String s) {
+    private boolean isValid(String str) {
         Stack<Character> stack = new Stack<>();
-        for (char c : s.toCharArray()) {
+        for (char c : str.toCharArray()) {
             if (c == '(' || c == '{' || c == '[') {
                 stack.push(c);
             } else {
