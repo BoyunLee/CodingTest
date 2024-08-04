@@ -4,26 +4,26 @@ class Solution {
     public int solution(String s) {
         int answer = 0;
         
-        String A = s + s; 
-        
-        for(int i=0; i<s.length(); i++) {
-             String rotatedStr = A.substring(i, i + s.length());
-            if (isValid(rotatedStr)) {
-                answer++;
-            }
-        }
-        return answer;
-    }
-
-    //     // 문자열 회전
-    //     for (int i = 0; i < s.length(); i++) {
-    //         String rotatedStr = s.substring(i) + s.substring(0, i);
+    //     // 회전 대신 문자열 두 번 반복하기
+    //     String A = s + s; 
+    //     for(int i=0; i<s.length(); i++) {
+    //          String rotatedStr = A.substring(i, i + s.length());
     //         if (isValid(rotatedStr)) {
     //             answer++;
     //         }
     //     }
     //     return answer;
     // }
+
+        // 문자열 회전
+        for (int i = 0; i < s.length(); i++) {
+            String rotatedStr = s.substring(i) + s.substring(0, i);
+            if (isValid(rotatedStr)) {
+                answer++;
+            }
+        }
+        return answer;
+    }
 
     // 괄호 짝 검사 메서드
     private boolean isValid(String str) {
