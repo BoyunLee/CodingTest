@@ -1,48 +1,49 @@
 import java.util.*;
+import java.io.*;
 
 class Solution {
     public int solution(int n, int[][] edge) {
-        Map<Integer, List<Integer>> graph = new HashMap<>();
-        for(int i=1; i<=n; i++) {
-            graph.put(i, new ArrayList<>());
+        int answer = 0;
+        
+        ArrayList<Integer>[] array = new ArrayList[n+1];
+        for (int i=0; i<=n; i++) {
+            array[i] = new ArrayList<>();
         }
         for (int[] e : edge) {
-            graph.get(e[0]).add(e[1]);
-            graph.get(e[1]).add(e[0]);
+            array[e[0]].add(e[1]);
+            array[e[1]].add(e[0]);
         }
-        return bfs(graph, n, 1);
-    }
-    private int bfs(Map<Integer, List<Integer>> graph, int n, int start) {
-        int maxdist = 0;
-        int count = 0;
         
-        boolean[] visited = new boolean[n+1];
+        int[] visited = new int[n+1];
+        for(int i=1; i<=n; i++) {
+            visited[i] = -1;
+        }
+        
         Queue<Integer> queue = new ArrayDeque<>();
-        Queue<Integer> distqueue = new ArrayDeque<>();
-        
-        queue.offer(start);
-        distqueue.offer(0);
-        visited[start] = true;
+        queue.add(1);
+        visited[1] = 0;
+        int max = 0;
         
         while(!queue.isEmpty()) {
             int cur = queue.poll();
-            int dist = distqueue.poll();
             
-            if(maxdist < dist) {
-                maxdist = dist;
-                count = 1;
-            } else if (dist == maxdist) {
-                count++;
+            if(max < visited[cur]) {
+                max = visited[cur];
             }
             
-            for (int next : graph.get(cur)) {
-                if(!visited[next]) {
-                    queue.offer(next);
-                    distqueue.offer(dist+1);
-                    visited[next] = true;
+            for (int next : array[cur]) {
+                if(visited[next] != -1) {
+                    continue;
                 }
+                visited[next] = visited[cur] + 1;
+                queue.add(next);
             }
         }
-        return count;
+        for (int i=0; i<=n; i++) {
+            if (visited[i] == max) {
+                answer++;
+            }
+        }
+        return answer;
     }
 }
