@@ -1,50 +1,56 @@
 import java.util.*;
-
-public class Solution {
+class Solution {
+    
+    int answer;
+    List<List<Integer>> list;
+    
     public int solution(String[][] relation) {
-        int rowCount = relation.length;
-        int colCount = relation[0].length;
-
-        List<Integer> listAll = new ArrayList<>();
-
-        // 모든 속성의 조합 생성
-        for (int i = 1; i < (1 << colCount); i++) {
-            if (Unique(i, relation, rowCount, colCount)) {
-                listAll.add(i);
-            }
+        answer = 0;
+        list = new ArrayList<>();
+        for (int i = 1; i <= relation[0].length; i++) {
+            dfs(relation, i, 0, new ArrayList<>());
         }
-
-        // 최소성 검사
-        List<Integer> candidateKeys = new ArrayList<>(listAll);
-        for (int i = 0; i < listAll.size(); i++) {
-            for (int j = i + 1; j < listAll.size(); j++) {
-                if ((listAll.get(i) & listAll.get(j)) == listAll.get(i)) {
-                    candidateKeys.remove(listAll.get(j));
-                }
-            }
-        }
-
-        // 후보키 개수 출력
-        int candidateKeyCount = candidateKeys.size();
-        System.out.println(candidateKeyCount);
-
-        return candidateKeyCount;
+        return list.size();
     }
-
-    private static boolean Unique(int combination, String[][] relation, int rowCount, int colCount) {
-        Set<String> seen = new HashSet<>();
-
-        for (int i = 0; i < rowCount; i++) {
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < colCount; j++) {
-                if ((combination & (1 << j)) != 0) {
-                    sb.append(relation[i][j]).append(",");
+    
+    public void dfs(String[][] relation, int n, int start, List<Integer> now) {
+        if (now.size() == n) {
+            
+            // 유일성 검사
+            Set<List<String>> set = new HashSet<>();
+            for (int i = 0; i < relation.length; i++) {
+                List<String> tmp = new ArrayList<>();
+                for (int x : now) {
+                    tmp.add(relation[i][x]);
                 }
+                set.add(tmp);
             }
-            if (!seen.add(sb.toString())) {
-                return false;
+            
+            // 최소성 검사
+            if (set.size() == relation.length) {
+                boolean flag = true;
+                for (List<Integer> x : list) {
+                    int cnt = 0;
+                    for (int y : now) {
+                        if (x.contains(y)) cnt++;
+                    }
+                    if (cnt == x.size()) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    list.add(new ArrayList<>(now));
+                }
+                
             }
+            return;
         }
-        return true;
+        
+        for (int i = start; i < relation[0].length; i++) {
+            now.add(i);
+            dfs(relation, n, i+1, now);
+            now.remove(now.size() - 1);
+        }
     }
 }
