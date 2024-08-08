@@ -1,38 +1,35 @@
 import java.util.*;
-import java.io.*;
 
 class Solution {
     public int solution(String s) {
         int answer = 0;
         String A = s + s;
         for(int i=0; i<s.length(); i++) {
-            String target = A.substring(i, i + s.length());
+            String target = A.substring(i, i+s.length());
             if(isVaild(target)) {
-                answer ++;
+                answer++;
             }
         }
-        
         return answer;
     }
     
     private boolean isVaild(String s) {
         Stack<Character> stack = new Stack<>();
-
-        for (char current : s.toCharArray()) {
-            if (current == '(' ||  current == '{' ||  current == '[') {
-                stack.push(current);
+        for (char cur : s.toCharArray()) {
+            if(cur == '(' || cur == '{' || cur == '[') {
+                stack.push(cur);
             } else {
-                if (stack.isEmpty()) {
+                if(stack.isEmpty()) {
+                    return false;
+                } 
+                
+                char c = stack.pop();
+                if((c == '(' && cur != ')') ||
+                   (c == '{' && cur != '}') ||
+                   (c == '[' && cur != ']')) {
                     return false;
                 }
-
-                char target = stack.pop();
-                if ((target == '(' && current != ')') || 
-                    (target == '{' && current != '}') || 
-                    (target == '[' && current != ']')) {
-                        return false;
-                }
-            }
+            } 
         }
         return stack.isEmpty();
     }
