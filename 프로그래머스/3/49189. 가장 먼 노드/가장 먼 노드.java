@@ -1,21 +1,21 @@
 import java.util.*;
-import java.io.*;
 
 class Solution {
     public int solution(int n, int[][] edge) {
         int answer = 0;
         
         ArrayList<Integer>[] array = new ArrayList[n+1];
-        for (int i=0; i<=n; i++) {
+        for(int i=0; i<=n; i++) {
             array[i] = new ArrayList<>();
         }
+            
         for (int[] e : edge) {
             array[e[0]].add(e[1]);
             array[e[1]].add(e[0]);
         }
         
         int[] visited = new int[n+1];
-        for(int i=1; i<=n; i++) {
+        for (int i=1; i<=n; i++) {
             visited[i] = -1;
         }
         
@@ -27,7 +27,7 @@ class Solution {
         while(!queue.isEmpty()) {
             int cur = queue.poll();
             
-            if(max < visited[cur]) {
+            if(visited[cur] > max) {
                 max = visited[cur];
             }
             
@@ -39,6 +39,7 @@ class Solution {
                 queue.add(next);
             }
         }
+        
         for (int i=0; i<=n; i++) {
             if (visited[i] == max) {
                 answer++;
