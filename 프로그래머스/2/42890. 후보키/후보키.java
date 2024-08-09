@@ -1,11 +1,8 @@
 import java.util.*;
 class Solution {
-    
-    int answer;
     List<List<Integer>> list;
     
     public int solution(String[][] relation) {
-        answer = 0;
         list = new ArrayList<>();
         for (int i = 1; i <= relation[0].length; i++) {
             dfs(relation, i, 0, new ArrayList<>());
@@ -32,7 +29,9 @@ class Solution {
                 for (List<Integer> x : list) {
                     int cnt = 0;
                     for (int y : now) {
-                        if (x.contains(y)) cnt++;
+                        if (x.contains(y)) {
+                            cnt++;
+                        }
                     }
                     if (cnt == x.size()) {
                         flag = false;
@@ -42,7 +41,6 @@ class Solution {
                 if (flag) {
                     list.add(new ArrayList<>(now));
                 }
-                
             }
             return;
         }
