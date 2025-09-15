@@ -2,12 +2,13 @@ import java.util.*;
 
 class Solution {
     public String solution(String my_string) {
-        StringBuilder answer = new StringBuilder();
-        for(char c : my_string.toCharArray()) {
+        String answer = "";
+        for(int i=0; i<my_string.length(); i++) {
+            char c = my_string.charAt(i);
             if(answer.indexOf(String.valueOf(c)) == -1) {
-                answer.append(c);
+                answer += c;
             }
-        } 
-        return answer.toString();
+        }
+        return answer;
     }
 }
