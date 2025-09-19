@@ -1,43 +1,40 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-    class Solution {
-        public int[] solution(int[] progresses, int[] speeds) {
+class Solution {
+    public int[] solution(int[] progresses, int[] speeds) {
+        int p = progresses.length;
+        int[] done = new int[p];
+        List<Integer> list = new ArrayList<Integer>();
         
-        // 각 기능이 완료되는 날짜를 계산하여 days 배열에 저장
-        int n = progresses.length;
-        int[] days = new int[n];
-        for (int i = 0; i < n; i++) {
-
-            // 100 <= progresses + speeds x day
-            // - speeds x day <= -100 + progresses
-            // day >= (100 - progresses) / speeds
-            // Math.ceil : 무조건 올림 처리
-            days[i] = (int) Math.ceil ((100.0 - progresses[i]) / speeds[i]);
+        for(int i=0; i<p; i++) {
+            int n = 0;
+            while(progresses[i] < 100) {
+                progresses[i] += speeds[i];
+                n++;
             }
-
-        List<Integer> answerList = new ArrayList<>();
+            done[i] = n;
+        }
+        
         int count = 1;
-        int countDay = days[0];
-
-        for (int i = 1; i < n; i++) {
-            if (days[i] <= countDay) {
+        int temp = done[0];
+        
+        for(int j=1; j<p; j++) {
+            if(done[j] <= temp) {
                 count++;
             } else {
-                answerList.add(count);
+                list.add(count);
                 count = 1;
-                countDay = days[i];
+                temp = done[j];
             }
         }
-
-        // 마지막 배포된 기능의 개수를 추가
-        answerList.add(count);
-
-        // 리스트를 배열로 변환하여 반환
-        int[] answer = new int[answerList.size()];
-        for (int i = 0; i < answerList.size(); i++) {
-            answer[i] = answerList.get(i);
+        
+        list.add(count);
+        
+        int[] answer = new int[list.size()];
+        for(int k=0; k<list.size(); k++) {
+            answer[k] = list.get(k);
         }
+        
         return answer;
-        }
     }
+}
