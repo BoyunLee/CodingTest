@@ -2,38 +2,42 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        int p = progresses.length;
-        int[] done = new int[p];
-        List<Integer> list = new ArrayList<Integer>();
+        int[] answer = {};
+        int n = progresses.length;
+        int[] done = new int[n];
         
-        for(int i=0; i<p; i++) {
-            int n = 0;
+        for(int i=0; i<n; i++) {
+            int count=0;
             while(progresses[i] < 100) {
                 progresses[i] += speeds[i];
-                n++;
-            }
-            done[i] = n;
-        }
-        
-        int count = 1;
-        int temp = done[0];
-        
-        for(int j=1; j<p; j++) {
-            if(done[j] <= temp) {
                 count++;
+            }
+            done[i] = count;
+        }
+        
+        List<Integer> list = new ArrayList<>();
+        
+        int current = done[0];
+        int donecount = 1;
+        
+        for(int k=1; k<n; k++) {
+            if(current >= done[k]) {
+                donecount++;
             } else {
-                list.add(count);
-                count = 1;
-                temp = done[j];
+                list.add(donecount);
+                donecount = 1;
+                current = done[k];
             }
         }
+        list.add(donecount);
         
-        list.add(count);
+        int m = list.size();
+        answer = new int[m];
         
-        int[] answer = new int[list.size()];
-        for(int k=0; k<list.size(); k++) {
-            answer[k] = list.get(k);
+        for(int j=0; j<m; j++) {
+            answer[j] = list.get(j);
         }
+        
         
         return answer;
     }
