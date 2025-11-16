@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Solution {
+class Solution {    
     public int solution(int[][] maps) {
         int answer = -1;
         int n = maps.length;
@@ -11,29 +11,29 @@ class Solution {
         queue.add(new int[] {0, 0, 1});
         visited[0][0] = true;
         
-        int[] dr = {0, 1, 0, -1};
-        int[] dc = {1, 0, -1, 0};
-        
+        int[] dx = {1, 0, -1, 0};
+        int[] dy = {0, 1, 0, -1};   
         
         while(!queue.isEmpty()) {
             int[] cur = queue.remove();
-            int r = cur[0], c = cur[1], dist = cur[2];
+            int x = cur[0], y = cur[1], dist = cur[2];
             
-            if(r == n-1 && c == m-1) {
+            if(x == n-1 && y == m-1) {
                 return dist;
             }
             
-            for (int d=0; d<4; d++) {
-                int nr = r + dr[d];
-                int nc = c + dc[d];
-                if(nr>=0 && nr<n && nc>=0 && nc<m && maps[nr][nc] == 1) {
-                    if (!visited[nr][nc]) {
-                        visited[nr][nc] = true;
-                        queue.add(new int[] {nr, nc, dist+1});
+            for(int i=0; i<4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+                if(nx>=0 && nx<n && ny>=0 && ny<m && maps[nx][ny] == 1) {
+                    if(!visited[nx][ny]) {
+                        visited[nx][ny] = true;
+                        queue.add(new int[] {nx, ny, dist+1});
                     }
                 }
             }
         }
+        
         return answer;
     }
 }
