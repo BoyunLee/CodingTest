@@ -1,0 +1,16 @@
+WITH RECURSIVE cte AS (
+    SELECT ID, PARENT_ID, 1 as depth
+    FROM ECOLI_DATA
+    WHERE PARENT_ID IS NULL
+    
+    UNION ALL
+
+    SELECT e.ID, e.PARENT_ID, cte.depth+1
+    FROM ECOLI_DATA as e
+    JOIN cte ON e.PARENT_ID = cte.ID
+)
+SELECT ID
+FROM cte 
+WHERE depth = 3
+ORDER BY ID ASC;
+;
