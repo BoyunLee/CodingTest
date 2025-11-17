@@ -1,48 +1,48 @@
 import java.util.*;
 
 class Solution {
+    
+    class current {
+        String word;
+        int cnt;
+        
+        current(String word, int cnt) {
+            this.word = word;
+            this.cnt = cnt;
+        }
+    }
+    
+    int getDifCnt(String now, String next) {
+        int difCnt = 0;
+        for(int i=0; i<now.length(); i++) {
+            if(now.charAt(i) != next.charAt(i)) {
+                difCnt++;
+            }
+        }
+        return difCnt;
+    }
+    
     public int solution(String begin, String target, String[] words) {
-        Queue<WordState> queue = new ArrayDeque<>();
+        Queue<current> queue = new ArrayDeque<>();
         boolean[] visited = new boolean[words.length];
         
-        queue.offer(new WordState(begin, 0));
-        
-        while (!queue.isEmpty()) {
-            // 방문
-            WordState cur = queue.poll();
+        queue.add(new current(begin, 0));
+        while(!queue.isEmpty()) {
+            current cur = queue.poll();
             
-            // 방문한 곳이 찾던 target
-            if (cur.word.equals(target)) return cur.cnt;
+            if(cur.word.equals(target)) {
+                return cur.cnt;
+            }
             
-            // nextvertex 예약
-            for (int i=0; i<words.length; i++) {
-                if (getDiffCount(cur.word, words[i]) == 1) {
-                    if (!visited[i]) {
-                        queue.offer(new WordState(words[i], cur.cnt+1));
+            for(int i=0; i<words.length; i++) {
+                if(getDifCnt(cur.word, words[i]) == 1) {
+                    if(!visited[i]) {
+                        queue.add(new current(words[i], cur.cnt+1));
                         visited[i] = true;
                     }
                 }
             }
         }
         return 0;
-    }
-    
-    int getDiffCount(String word, String target) {
-        int diffCount = 0;
-        for (int i = 0; i < word.length(); i++) {
-            if (word.charAt(i) != target.charAt(i)) diffCount++;
-        }
-        
-        return diffCount;
-    }
-    
-    class WordState {
-        String word;
-        int cnt;
-        
-        WordState(String word, int cnt) {
-            this.word = word;
-            this.cnt = cnt;
-        }
     }
 }
