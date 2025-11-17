@@ -1,28 +1,32 @@
+import java.util.*;
+
 class Solution {
     public int solution(String[][] book_time) {
         int answer = 0;
+        int[] dp = new int[1440];
+        for(int i=0; i<1440; i++) {
+            dp[i] = 0;
+        }
         
-        // 1440 = 24*60
-        int[] arr = new int[1440];
-        
-        for (String[] book : book_time) {
-            int start = changeMin(book[0]);
-            int end = changeMin(book[1])+10;
+        for(String[] time:book_time) {
+            int[] format = new int[2];
             
-            for (int i = start; i < end && i < 1440; i++) {
-                arr[i]++;
+            for(int i=0; i<2; i++) {
+                String[] parts = time[i].split(":");
+                int hour = Integer.parseInt(parts[0]);
+                int min = Integer.parseInt(parts[1]);
+                format[i] = hour*60 + min;
+            }
+            
+            for(int s=format[0]; s < Math.min(1440, format[1] + 10); s++) {
+                dp[s] += 1;
             }
         }
-        for (int j=0; j<1440; j++) {
-            answer = Math.max(answer, arr[j]);
-        }
-        return answer;
-    }
-    
-    public int changeMin(String time) {
-        int hour = Integer.parseInt(time.split(":")[0]);
-        int minute = Integer.parseInt(time.split(":")[1]);
         
-        return hour*60 + minute;
+        for (int x : dp) {
+            answer = Math.max(answer, x);
+        }
+        
+        return answer;
     }
 }
