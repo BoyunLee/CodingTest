@@ -1,4 +1,8 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
     static int[][] map;
@@ -7,19 +11,18 @@ public class Main {
     static int[] dy = {0, 0, -1, 1}; 
     static int house;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        Scanner sc = new Scanner(System.in);
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int N = sc.nextInt();
-        sc.nextLine();
+        int N = Integer.parseInt(br.readLine());
 
         map = new int[N][N];
         visited = new boolean[N][N];
 
         for (int i=0; i<N; i++) {
-            String line = sc.nextLine();
-            for(int j=0; j<N; j++) {
+            String line = br.readLine();
+            for (int j = 0; j < N; j++) {
                 map[i][j] = line.charAt(j) - '0';
             }
         }
@@ -37,6 +40,7 @@ public class Main {
                 }
             }
         }
+
         System.out.println(count);
         Collections.sort(answer);
         for(int h : answer) {
