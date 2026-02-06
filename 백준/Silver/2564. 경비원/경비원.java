@@ -1,4 +1,6 @@
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
 	
@@ -11,23 +13,26 @@ public class Main {
 		return 2*N+M+(M-dist);
 	}
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
-		M = sc.nextInt();
-		int K = sc.nextInt();
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(br.readLine());
 		
 		int[] store = new int[K]; 
 		
 		for(int i=0; i<K; i++) {
-			int dir = sc.nextInt();
-			int dist = sc.nextInt();
+			st = new StringTokenizer(br.readLine());
+			int dir = Integer.parseInt(st.nextToken());
+			int dist = Integer.parseInt(st.nextToken());
 			store[i] = convert(dir, dist);
 			
 		}
 		
-		int tx = sc.nextInt();
-		int ty = sc.nextInt();
+		st = new StringTokenizer(br.readLine());
+		int tx = Integer.parseInt(st.nextToken());
+		int ty = Integer.parseInt(st.nextToken());
 		int target = convert(tx, ty);
 		
 		int perimeter = 2*(N+M);
