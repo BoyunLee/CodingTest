@@ -2,15 +2,21 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Main {
+	
 	static int N;
+	static boolean[] col;
+	static boolean[] cross1;
+	static boolean[] cross2;
 	static int count;
-	static int[] col;
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
-		col = new int[N];
+		col = new boolean[N];
+		cross1 = new boolean[2*N];
+		cross2 = new boolean[2*N];
 		
+		count = 0;
 		dfs(0);
 		
 		System.out.println(count);
@@ -23,24 +29,18 @@ public class Main {
 		}
 		
 		for(int c=0; c<N; c++) {
-			col[row] = c;
-			
-			if(isPossible(row)) {
-				dfs(row+1);
-			}
-		}
-	}
-	
-	static boolean isPossible(int row) {
-		for(int r=0; r<row; r++) {
-			if(col[r] == col[row]) {
-				return false;
+			if(col[c] || cross1[row+c] || cross2[row-c+N-1]) {
+				continue;
 			}
 			
-			if(Math.abs(row-r) == Math.abs(col[row] - col[r])) {
-				return false;
-			}
+			col[c] = true;
+			cross1[row+c] = true;
+			cross2[row-c+N-1] = true;
+			dfs(row+1);
+			cross2[row-c+N-1] = false;
+			cross1[row+c] = false;
+			col[c] = false;
 		}
-		return true;
 	}
+
 }
