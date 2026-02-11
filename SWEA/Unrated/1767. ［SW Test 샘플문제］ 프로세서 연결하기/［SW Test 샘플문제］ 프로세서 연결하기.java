@@ -81,6 +81,7 @@ class Solution {
 					if(map[nr][nc] == 0) {
 						sucess = true;
 						list.add(new int[] {nr, nc});
+						len++;
 					} else {
 						sucess = false;
 						break;
@@ -91,18 +92,23 @@ class Solution {
 			}
 			
 			if(sucess) {
-				for(int[] l : list) {
-					map[l[0]][l[1]] = 2;
-					len++;
-				}
+				nr = r;
+				nc = c;
+				for (int i = 0; i < len; i++) {
+                    nr += dr[d];
+                    nc += dc[d];
+                    map[nr][nc] = 2;
+                }
 				
 				dfs(idx+1, core+1, wire+len);
 				
 				nr = r;
 				nc = c;
-				for(int[] l : list) {
-					map[l[0]][l[1]] = 0;
-				}
+				for (int i = 0; i < len; i++) {
+                    nr += dr[d];
+                    nc += dc[d];
+                    map[nr][nc] = 0;
+                }
 			}
 		}		
 		dfs(idx+1, core, wire);
