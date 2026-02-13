@@ -80,26 +80,19 @@ public class Main {
 	}
 	
 	static void bfs(int r, int c) {
-	    Queue<int[]> q = new ArrayDeque<>();
-	    q.offer(new int[]{r, c});
-	    virusVisited[r][c] = true;
-
-	    while(!q.isEmpty()) {
-	        int[] cur = q.poll();
-
-	        for(int d=0; d<4; d++) {
-	            int nr = cur[0] + dr[d];
-	            int nc = cur[1] + dc[d];
-
-	            if(0<=nr && nr<N && 0<=nc && nc<M) {
-	                if(copy[nr][nc] == 0 && !virusVisited[nr][nc]) {
-	                    virusVisited[nr][nc] = true;
-	                    copy[nr][nc] = 2;
-	                    q.offer(new int[]{nr, nc});
-	                }
-	            }
-	        }
-	    }
+		virusVisited[r][c] = true;
+		copy[r][c] = 2;
+			
+		for(int d=0; d<4; d++) {
+			int nr = r + dr[d];
+			int nc = c + dc[d];
+			
+			if(0<=nr && nr<N && 0<=nc && nc<M) {
+				if(copy[nr][nc] == 0 && !virusVisited[nr][nc]) {
+					bfs(nr, nc);
+				}
+			}
+		}
 	}
 	
 	static void safe() {
