@@ -1,52 +1,45 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+	
+	static int N;
+	static int S;
+	static int[] arr;
+	static int count;
 
-	static int N, S, totalCnt;
-	static int[] stones;
-	static boolean[] visited;
-
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
 		N = Integer.parseInt(st.nextToken());
 		S = Integer.parseInt(st.nextToken());
-		totalCnt = 0;
-		stones = new int[N];
-		visited = new boolean[N];
+		
+		arr = new int[N];
 		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
-			stones[i] = Integer.parseInt(st.nextToken());
+		for(int i=0; i<N; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
-
-		subset(0, 0);
-		System.out.println(totalCnt);
-
+		
+		count = 0;
+		dfs(0, 0);
+		if(S == 0) {
+			count -= 1;
+		}
+		System.out.println(count);
 	}
-
-	static void subset(int idx, int cnt) {
-		if (idx == N) {
-			if (cnt == 0)
+	
+	static void dfs(int idx, int sum) {
+		if(idx == N) {
+			if(sum == S) {
+				count++;
 				return;
-			int total = 0;
-			for (int i = 0; i < N; i++) {
-				if (visited[i]) {
-					total += stones[i];
-				}
 			}
-			if (total == S)
-				totalCnt++;
 			return;
 		}
-
-		visited[idx] = true;
-		subset(idx + 1, cnt + 1);
-		visited[idx] = false;
-		subset(idx + 1, cnt);
-
+		
+		dfs(idx+1, sum + arr[idx]);
+		
+		dfs(idx+1, sum);
 	}
 }
