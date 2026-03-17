@@ -1,79 +1,61 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-
-	static StringBuilder sb = new StringBuilder();
-	static int M, N, K, cnt;
+	
 	static int[][] map;
-	static Queue<int[]> queue;
-	static int[][] moves = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+	static boolean[][] visited;
+	static int[] dr = {1, 0, -1, 0};
+	static int[] dc = {0, 1, 0, -1};
+	static int M;
+	static int N;
+	static StringBuilder sb = new StringBuilder();
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int T = Integer.parseInt(br.readLine());
-		StringTokenizer st;
-		for (int t = 1; t <= T; t++) {
-			st = new StringTokenizer(br.readLine());
+		for(int t=0; t<T; t++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
 			M = Integer.parseInt(st.nextToken());
 			N = Integer.parseInt(st.nextToken());
-			K = Integer.parseInt(st.nextToken());
-			cnt = 0;
-
-			map = new int[N][M];
-			queue = new ArrayDeque<>();
-
-			for (int i = 0; i < K; i++) {
+			int K = Integer.parseInt(st.nextToken());
+			
+			map = new int[M][N];
+			for(int i=0; i<K; i++) {
 				st = new StringTokenizer(br.readLine());
-				int col = Integer.parseInt(st.nextToken());
-				int row = Integer.parseInt(st.nextToken());
-				map[row][col] = 1;
+				int x = Integer.parseInt(st.nextToken());
+				int y = Integer.parseInt(st.nextToken());
+				
+				map[x][y] = 1;
 			}
-
-			// bfs 시뮬레이션
-			for (int i = 0; i < N; i++) {
-				for (int j = 0; j < M; j++) {
-					if (map[i][j] == 1) {
-						bfs(i, j);
-						cnt++;
+			
+			visited = new boolean[M][N];
+			int count = 0;
+			for(int i=0; i<M; i++) {
+				for(int j=0; j<N; j++) {
+					if(map[i][j] == 1 && !visited[i][j]) {
+						dfs(i, j);
+						count++;
 					}
 				}
 			}
-
-			sb.append(cnt).append("\n");
+			sb.append(count).append("\n");
 		}
 		System.out.println(sb.toString().trim());
-
 	}
-
-	static void bfs(int row, int col) {
-		queue.offer(new int[] { row, col });
-		map[row][col] = 0;
-
-		while (!queue.isEmpty()) {
-			int[] curr = queue.poll();
-			int r = curr[0];
-			int c = curr[1];
-
-			for (int i = 0; i < 4; i++) {
-				int nr = r + moves[i][0];
-				int nc = c + moves[i][1];
-
-				if (nr < 0 || nc < 0 || nr >= N || nc >= M)
-					continue;
-
-				if (map[nr][nc] == 0)
-					continue;
-
-				map[nr][nc] = 0;
-				queue.offer(new int[] { nr, nc });
+	static void dfs(int r, int c) {
+		visited[r][c] = true;
+		
+		for(int d=0; d<4; d++) {
+			int nr = r + dr[d];
+			int nc = c + dc[d];
+			
+			if(nr>=0 && nr<M && nc>=0 && nc<N) {
+				if(map[nr][nc]==1 && !visited[nr][nc]) {
+					dfs(nr, nc);
+				}
 			}
-
 		}
 	}
-
 }
