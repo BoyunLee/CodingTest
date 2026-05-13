@@ -1,63 +1,52 @@
 import java.util.*;
 
 class Solution {
-    
-    static int[][] game_board;
-    static int[][] table;
+
     static int n;
-    static int m;
-    static List<List<int[]>> puzzles;
-    static List<List<int[]>> blanks;
-    static int[] dr = {0, 1, 0, -1};
-    static int[] dc = {1, 0, -1, 0};  
     static boolean[][] visited;
-    static int answer;
+    static int[] dr = {0, 1, 0, -1};
+    static int[] dc = {1, 0, -1, 0};
     
     public int solution(int[][] game_board, int[][] table) {
-        answer = 0;
-        
-        Solution.table = table;
-        Solution.game_board = game_board;
+        int answer = 0;
         
         n = game_board.length;
-        m = game_board[0].length;
-        
-        puzzles = new ArrayList<>(); 
-        visited = new boolean[n][m];
+        visited = new boolean[n][n];
+        List<List<int[]>> blanks = new ArrayList<>();
         for(int i=0; i<n; i++) {
-            for(int j=0; j<m; j++) {
-                if(table[i][j] == 1 && !visited[i][j]) {
-                    List<int[]> shape = bfsPuzzle(i, j);
-                    puzzles.add(shape);
+            for(int j=0; j<n; j++) {
+                if(game_board[i][j]==0 && !visited[i][j]) {
+                    List<int[]> blank = getShape(i, j, game_board, 0);
+                    blanks.add(blank);
                 }
             }
         }
         
-        blanks = new ArrayList<>();
-        visited = new boolean[n][m];
+        visited = new boolean[n][n];
+        List<List<int[]>> puzzles = new ArrayList<>();
         for(int i=0; i<n; i++) {
-            for(int j=0; j<m; j++) {
-                if(game_board[i][j] == 0 && !visited[i][j]) {
-                    List<int[]> shape = bfsBlank(i, j);
-                    blanks.add(shape);
+            for(int j=0; j<n; j++) {
+                if(table[i][j]==1 && !visited[i][j]) {
+                    List<int[]> puzzle = getShape(i, j, table, 1);
+                    puzzles.add(puzzle);
                 }
             }
         }
         
         boolean[] used = new boolean[puzzles.size()];
         for(List<int[]> blank : blanks) {
-            for(int i=0; i<puzzles.size(); i++) {
-                if(used[i]) continue;
+            for(int p=0; p<puzzles.size(); p++) {
+                if(used[p]) continue;
                 
-                List<int[]> puzzle = puzzles.get(i);
+                List<int[]> puzzle = puzzles.get(p);
                 if(blank.size() != puzzle.size()) continue;
                 
                 boolean matched = false;
                 for(int rot=0; rot<4; rot++) {
                     if(isSame(blank, puzzle)) {
-                        used[i] = true;
-                        answer += blank.size();
+                        used[p] = true;
                         matched = true;
+                        answer += puzzle.size();
                         break;
                     }
                     puzzle = rotate(puzzle);
@@ -68,12 +57,11 @@ class Solution {
         return answer;
     }
     
-    static List<int[]> bfsPuzzle(int r, int c) {
+    static List<int[]> getShape(int r, int c, int[][] map, int num) {
         List<int[]> shape = new ArrayList<>();
-        shape.add(new int[] {0, 0});
-        
         Queue<int[]> queue = new ArrayDeque<>();
         visited[r][c] = true;
+        shape.add(new int[] {0, 0});
         queue.add(new int[] {r, c});
         
         while(!queue.isEmpty()) {
@@ -83,11 +71,11 @@ class Solution {
                 int nr = cur[0] + dr[d];
                 int nc = cur[1] + dc[d];
                 
-                if(nr>=0 && nr<n && nc>=0 && nc<m) {
-                    if(table[nr][nc] == 1 && !visited[nr][nc]) {
+                if(nr>=0 && nr<n && nc>=0 && nc<n) {
+                    if(map[nr][nc]==num && !visited[nr][nc]) {
                         visited[nr][nc] = true;
+                        shape.add(new int[] {nr-r, nc-c});
                         queue.add(new int[] {nr, nc});
-                        shape.add(new int[]{nr-r, nc-c});
                     }
                 }
             }
@@ -96,40 +84,20 @@ class Solution {
         return shape;
     }
     
-    static List<int[]> bfsBlank(int r, int c) {
-        List<int[]> shape = new ArrayList<>();
-        shape.add(new int[] {0, 0});
+    static void normalize(List<int[]> shape) {
+        int minR = Integer.MAX_VALUE;
+        int minC = Integer.MAX_VALUE;
         
-        Queue<int[]> queue = new ArrayDeque<>();
-        visited[r][c] = true;
-        queue.add(new int[] {r, c});
+        for(int[] s : shape) {
+            minR = Math.min(s[0], minR);
+            minC = Math.min(s[1], minC);
+        }
         
-        while(!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            
-            for(int d=0; d<4; d++) {
-                int nr = cur[0] + dr[d];
-                int nc = cur[1] + dc[d];
-                
-                if(nr>=0 && nr<n && nc>=0 && nc<m) {
-                    if(game_board[nr][nc] == 0 && !visited[nr][nc]) {
-                        visited[nr][nc] = true;
-                        queue.add(new int[] {nr, nc});
-                        shape.add(new int[]{nr-r, nc-c});
-                    }
-                }
-            }
+        for(int[] s : shape) {
+            s[0] -= minR;
+            s[1] -= minC;
         }
-        normalize(shape);
-        return shape;
-    }
-    
-    static boolean isSame(List<int[]> a, List<int[]> b) {
-        for(int i=0; i<a.size(); i++) {
-            if(a.get(i)[0] != b.get(i)[0]) return false;
-            if(a.get(i)[1] != b.get(i)[1]) return false;
-        }
-        return true;
+        sortShape(shape);
     }
     
     static void sortShape(List<int[]> shape) {
@@ -141,37 +109,25 @@ class Solution {
         });
     }
     
-    static List<int[]> rotate(List<int[]> shape) {
+    static boolean isSame(List<int[]> blank, List<int[]> puzzle) {
+        for(int i=0; i<blank.size(); i++) {
+            if(blank.get(i)[0] != puzzle.get(i)[0]) return false;
+            if(blank.get(i)[1] != puzzle.get(i)[1]) return false;
+        }
+        return true;
+    }
+    
+    static List<int[]> rotate(List<int[]> puzzle) {
         List<int[]> rotated = new ArrayList<>();
-
-        for(int[] p : shape) {
+        
+        for(int[] p : puzzle) {
             int r = p[0];
             int c = p[1];
             rotated.add(new int[]{c, -r});
         }
-
+        
         normalize(rotated);
 
         return rotated;
-    }
-    
-    static void normalize(List<int[]> shape) {
-
-        int minR = Integer.MAX_VALUE;
-        int minC = Integer.MAX_VALUE;
-
-        for(int[] p : shape) {
-
-            minR = Math.min(minR, p[0]);
-            minC = Math.min(minC, p[1]);
-        }
-
-        for(int[] p : shape) {
-
-            p[0] -= minR;
-            p[1] -= minC;
-        }
-
-        sortShape(shape);
     }
 }
